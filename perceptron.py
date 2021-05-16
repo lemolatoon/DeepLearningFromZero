@@ -28,18 +28,40 @@ class np_perceptron:
 
     def run(self, x):
         tmp = np.sum(self.w * x) + self.b
+        return self.step(tmp)
+        '''
         if  tmp <= 0: 
             #print("tmp:" + str(tmp))
             return 0
         else:
             #print("tmp:" + str(tmp))
             return 1
+        '''
 
     def check(self):
-        print(self.run(np.array([0, 0])))
-        print(self.run(np.array([1, 0])))
-        print(self.run(np.array([0, 1])))
-        print(self.run(np.array([1, 1])))
+        for xs in np.array([[0, 0], [1, 0], [1, 0], [1, 1]]):
+            y = self.run(xs)
+            print(str(xs) + " -> " + str(y))
+
+    @staticmethod
+    def step(x):
+        if x > 0:
+            return 1
+        else:
+            return 0
+
+    @staticmethod
+    def step_function(x):
+        #print("x: " + str(x))
+        y = x > 0
+        #print("y: " + str(y))
+        return y.astype(np.int)
+        '''
+        if x > 0:
+            return 1
+        else:
+            return 0
+        '''
 
 class gate:
     def __init__(self, perceptron=None):
@@ -64,22 +86,25 @@ class gate:
         return self.run(x)
          
     def check(self):
-            print(self.run(np.array([0, 0])))
-            print(self.run(np.array([1, 0])))
-            print(self.run(np.array([0, 1])))
-            print(self.run(np.array([1, 1])))
+            for xs in np.array([[0, 0], [1, 0], [1, 0], [1, 1]]):
+                y = self.run(xs)
+                print(str(xs) + " -> " + str(y))
+
+
 
 class XOR(gate):
     def run(self, x):
+        s1 = self.NAND(x)
+        s2 = self.OR(x)
+        y = self.AND(np.array([s1, s2]))
+        '''
         print("==XOR==")
         print("input:" + str(x))
-        s1 = self.NAND(x)
         print("NAND:" + str(s1))
-        s2 = self.OR(x)
         print("OR:" + str(s2))
-        y = self.AND(np.array([s1, s2]))
         print("AND:" + str(y))
         print("==XOR==")
+        '''
         return y
 
 
@@ -88,3 +113,5 @@ class XOR(gate):
 if __name__ == "__main__":
     xor = XOR()
     xor.check()
+    me = Man("David")
+    me.hello()
