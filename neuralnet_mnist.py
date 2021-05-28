@@ -12,6 +12,7 @@ from dataset.mnist import load_mnist
 def image_show(img):
     pil_image = Image.fromarray(np.uint8(img))
     pil_image.show()
+    print("img show")
 
 
 def get_data():
@@ -71,7 +72,38 @@ def test(x_test, t_test, network, batch_size=100):
 
 
 if __name__ == "__main__":
-    network = create_network()
+    #network = create_network()
     x_test, t_test = get_data()
-    test(x_test, t_test, network)
+    #print(x_test.shape)
+    #test(x_test, t_test, network)
 
+    network = get_parameter()
+    w1 = network["W1"]
+    w2 = network["W2"]
+    w3 = network["W3"]
+    b1 = network["b1"]
+    b2 = network["b2"]
+    b3 = network["b3"]
+    xs, ts = get_data()
+    i = random.randrange(0, 10000)
+    x = xs[i]
+    t = ts[i]
+    image_show(x.reshape(28, 28))
+
+    print(x.shape)
+
+    x = np.dot(x,w1) + b1
+    x = Layer.sigmoid(x)
+    print(x.shape)
+    
+
+    x = np.dot(x,w2) + b2
+    x = Layer.sigmoid(x)
+    print(x.shape)
+
+
+    x = np.dot(x,w3) + b3
+    x = Layer.softmax(x)
+    print(x.shape)
+    print(x)
+    print(np.argmax(x))
