@@ -81,3 +81,6 @@ if __name__ == "__main__":
     network = Network(layers=(layer1, layer2, layer3))
     y = network.calc(X)
     print(str(X) + " -> " + str(y))
+
+
+    print("a")
