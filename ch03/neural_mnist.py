@@ -5,14 +5,22 @@ import numpy as np
 import random
 import sys
 import os
+import pandas as pd
 sys.path.append(os.pardir)
 from dataset.mnist import load_mnist
 
 
 def image_show(img):
+    #print(img.shape)
+    if img.shape[0] > 28:
+        img = img.reshape(28, 28)
+        #print("reshapeしたよ")
+        #print(img.shape)
+    if np.sum(img) <= img.size:
+        img = img * 255.0
+        #print("正規化戻したよ")
     pil_image = Image.fromarray(np.uint8(img))
     pil_image.show()
-    print("img show")
 
 
 def get_data():
@@ -69,21 +77,68 @@ def test(x_test, t_test, network, batch_size=100):
         print(count)
         print("Accuracy" + str(float(count) / len(t_test)))
 
+def main():
+    (x_train, t_train), (x_test, t_test) = load_mnist(normalize=True, one_hot_label=True)
+    param = pd.read_pickle("param_tmp.pkl")
+    w1 = param["W1"]
+    w2 = param["W2"]
+    b1 = param["b1"]
+    b2 = param["b2"]
+
+    layer1 = Layer(784, 100, w1, b1, activation="sigmoid")
+    layer2 = Layer(100, 10, w2, b2, activation="softmax")
+
+    net = Network((layer1, layer2))
+
+    t = np.argmax(t_test, axis=1)
+    while True:
+        txt = input()
+        if txt == "exit":
+            sys.exit(0)
+        elif txt == "acc":
+            print("train acc : " + str(net.accuracy(x_train, t_train)))
+            print("test acc : " + str(net.accuracy(x_test, t_test)))
+        elif txt == "reload":
+            param = pd.read_pickle("param_tmp.pkl")
+            w1 = param["W1"]
+            w2 = param["W2"]
+            b1 = param["b1"]
+            b2 = param["b2"]
+
+            net.layers[0].ws = w1
+            net.layers[0].bs = b1
+            net.layers[1].ws = w2
+            net.layers[1].bs = b2
+        else:
+            i = np.random.choice(x_test.shape[0])
+
+            x = x_test[i]
+            y = net.predict(x)
+            image_show(x)
+            print("t : " + str(t[i]) + "        y : " + str(np.argmax(y)))
+
 
 
 if __name__ == "__main__":
+    main()
     #network = create_network()
     x_test, t_test = get_data()
     #print(x_test.shape)
     #test(x_test, t_test, network)
 
     network = get_parameter()
+    network = pd.read_pickle("param_tmp.pkl")
     w1 = network["W1"]
     w2 = network["W2"]
-    w3 = network["W3"]
+    #w3 = network["W3"]
     b1 = network["b1"]
     b2 = network["b2"]
-    b3 = network["b3"]
+    #b3 = network["b3"]
+
+    #network = pd.readpickle("param.pkl")
+
+    
+
     xs, ts = get_data()
     i = random.randrange(0, 10000)
     x = xs[i]
@@ -98,12 +153,14 @@ if __name__ == "__main__":
     
 
     x = np.dot(x,w2) + b2
-    x = Layer.sigmoid(x)
+    #x = Layer.sigmoid(x)
+    x = Layer.softmax(x)
     print(x.shape)
 
-
+    '''
     x = np.dot(x,w3) + b3
     x = Layer.softmax(x)
+    '''
     print(x.shape)
     print(x)
     print(np.argmax(x))
