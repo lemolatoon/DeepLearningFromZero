@@ -1,5 +1,4 @@
 import numpy as np
-import perceptron as pcp
 import traceback
 
 
@@ -61,6 +60,14 @@ class Network:
             #print(Y)
         return Y
 
+    def accuracy(self, x, t):
+        y = self.predict(x)
+
+        t = np.argmax(t, axis=1)
+        y = np.argmax(y, axis=1)
+
+        return np.sum(y == t) / x.shape[0]
+
 
 if __name__ == "__main__":
     X = np.array([1.0, 0.5])
@@ -81,6 +88,3 @@ if __name__ == "__main__":
     network = Network(layers=(layer1, layer2, layer3))
     y = network.calc(X)
     print(str(X) + " -> " + str(y))
-
-
-    print("a")

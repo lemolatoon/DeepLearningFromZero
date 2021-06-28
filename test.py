@@ -9,5 +9,6 @@ print(y)
 print()
 print(np.arange(batch))
 print(t)
+print(t + "a")
 print(y[np.arange(batch), t]) #batchでそれぞれの行を取り出し、tで正解のラベルのみとりだす
 print(y[1, 4]) #一行一列目

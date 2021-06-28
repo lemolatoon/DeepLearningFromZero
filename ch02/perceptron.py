@@ -113,5 +113,3 @@ class XOR(gate):
 if __name__ == "__main__":
     xor = XOR()
     xor.check()
-    me = Man("David")
-    me.hello()
