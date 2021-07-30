@@ -29,18 +29,19 @@ def draw():
 
 def draw_test_train():
     #way = "Dropout"
-    way = ""
-    path1 = "data/20210627_{}/{}_{}.pickle".format(way, "train", "acc")
-    path2 = "data/20210627_{}/{}_{}.pickle".format(way, "test", "acc")
-    path1 = "data/20210627{}/{}_{}.pickle".format(way, "train", "acc")
-    path2 = "data/20210627{}/{}_{}.pickle".format(way, "test", "acc")
+    way = "SGD"
+    label = "loss"
+    #path1 = "data/20210627_{}/{}_{}.pickle".format(way, "train", label)
+    path2 = "data/20210627_{}/{}_{}.pickle".format(way, "test", label)
+    #path1 = "data/20210627{}/{}_{}.pickle".format(way, "train", label)
+    path2 = "data/20210627{}/{}_{}.pickle".format(way, "test", label)
     train = pd.read_pickle(path1)
     test = pd.read_pickle(path2)
     x = np.arange(len(train))
     plt.plot(x, smooth_curve(test), label="test")
     plt.plot(x, smooth_curve(train), label="train")
     plt.xlabel("iteration")
-    plt.ylabel("acc")
+    plt.ylabel(label)
     #plt.ylim(0, 1) #y軸の範囲
     #plt.xlim(0, 2000)
     plt.legend() #凡例
