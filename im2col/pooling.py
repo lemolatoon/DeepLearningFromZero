@@ -41,7 +41,10 @@ def pooling():
     pool.backward(dout)
     return pool
 
-
-if __name__ == "__main__":
+def main():
     pool = pooling()
     pool.print()
+
+
+if __name__ == "__main__":
+    main()
