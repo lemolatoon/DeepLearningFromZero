@@ -305,6 +305,7 @@ class Pooling:
         out_w = int(1 + (W - self.pool_w) / self.stride)
 
         col = im2col(x, self.pool_h, self.pool_w, self.stride, self.pad)
+        self.col_ = col
         col = col.reshape(-1, self.pool_h*self.pool_w)
 
         arg_max = np.argmax(col, axis=1)
@@ -319,17 +320,20 @@ class Pooling:
         return out
 
     def backward(self, dout):
+        self.dout = dout
+
         dout = dout.transpose(0, 2, 3, 1)
         
         pool_size = self.pool_h * self.pool_w
         dmax = np.zeros((dout.size, pool_size))
         dmax[np.arange(self.arg_max.size), self.arg_max.flatten()] = dout.flatten()
+        self.dmax = dmax
         dmax = dmax.reshape(dout.shape + (pool_size,)) 
         
         dcol = dmax.reshape(dmax.shape[0] * dmax.shape[1] * dmax.shape[2], -1)
         dx = col2im(dcol, self.x.shape, self.pool_h, self.pool_w, self.stride, self.pad)
 
-        self.dmax = dmax
+        #self.dmax = dmax
         self.dcol = dcol
         self.dx = dx
         
@@ -337,9 +341,11 @@ class Pooling:
 
     def print(self):
         print(f"====x====\n{self.x}")
+        print(f"====col_====\n{self.col_}")
         print(f"====col====\n{self.col}")
         print(f"====arg_max====\n{self.arg_max}")
         print(f"====out====\n{self.out}")
+        print(f"====dout====\n{self.dout}")
         print(f"====dmax====\n{self.dmax}")
         print(f"====dcol====\n{self.dcol}")
         print(f"====dx====\n{self.dx}")

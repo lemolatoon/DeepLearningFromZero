@@ -1,5 +1,5 @@
 import numpy as np
-from util import im2col
+#from util import im2col
 from layers import Convolution
 import os
 from contextlib import redirect_stdout
@@ -58,13 +58,19 @@ def compare():
         filt[0][0][0][1] = 5
         conv2 = convolution()
     print()
-    print(conv1.W)
+    print("====conv1.dW=====")
     print(conv1.dW)
+    print("====conv1.W=====")
+    print(conv1.W)
+    print("====conv1.out=====")
     print(conv1.out)
     print()
+    print("====conv2.W=====")
     print(conv2.W)
+    print("====conv2.out=====")
     print(conv2.out)
     print()
+    print("====outの差の絶対値の合計====")
     print(np.sum(np.abs(conv1.out - conv2.out)))
 
 def main():
@@ -78,4 +84,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    #main()
+    compare()
